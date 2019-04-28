@@ -15,6 +15,7 @@ namespace ProductmanagementCore.Services
         Orders AddOrders(Orders orders);
         bool Update(Orders orders);
         bool Delete(int id);
+        IEnumerable<Orders> FindbyUserId(int id);
     }
 
     public class OrdersService: IOrdersService
@@ -52,6 +53,10 @@ namespace ProductmanagementCore.Services
         public bool Delete(int id)
         {
             return _ordersRepository.Delete(id) > 0;
+        }
+        public IEnumerable<Orders> FindbyUserId(int id)
+        {
+            return _ordersRepository.FindByUserId(id);
         }
     }
 }

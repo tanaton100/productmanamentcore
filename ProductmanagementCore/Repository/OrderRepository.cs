@@ -17,6 +17,7 @@ namespace ProductmanagementCore.Repository
         int Delete(int entity);
         int Update(Orders entity);
         int Add(Orders tModel);
+        IEnumerable<Orders> FindByUserId(int id);
     }
 
     public class OrdersRepository : GenericReposiory<Orders>, IOrdersRepository
@@ -39,7 +40,14 @@ namespace ProductmanagementCore.Repository
 
             });
         }
-
+        public IEnumerable<Orders> FindByUserId(int id)
+        {
+            var sqlCommand = string.Format(@"SELECT * FROM [Orders] WHERE [IdUser] = @IdUser");
+            return this.DbConnection.Query<Orders>(sqlCommand, new
+            {
+                IdUser = id
+            }).ToList();
+        }
         public override int Update(Orders entity)
         {
             var sqlCommand = string.Format(@"UPDATE [Orders] SET [IdProduct] = @IdProduct ,[IdUser] = @IdUser where [Id] =@Id");
