@@ -18,7 +18,7 @@ namespace ProductmanagementCore.Repository
         protected GenericReposiory(IConfiguration configuration)
         {
             var connectionstring = configuration.GetSection("MsSqlConnectionString");
-            DbConnection = new SqlConnection("Data Source = GEOGERR; Initial Catalog = PRODUCTM; Integrated Security = true;");
+            DbConnection = new SqlConnection(connectionstring.Value);
         }
 
         public IEnumerable<TModel> GetAll()

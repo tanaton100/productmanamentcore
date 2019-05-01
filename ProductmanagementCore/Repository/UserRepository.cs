@@ -33,7 +33,7 @@ namespace ProductmanagementCore.Repository
             {
                 tModel.Id,
                 tModel.Email,
-                tModel.Fristname,
+                tModel.Firstname,
                 tModel.Username,
                 tModel.Lastname,
                 tModel.Tel,
@@ -59,7 +59,7 @@ namespace ProductmanagementCore.Repository
             {
                 tModel.Id,
                 tModel.Username,
-                tModel.Fristname,
+                Fristname = tModel.Firstname,
                 tModel.Lastname,
                 tModel.Email,
                 tModel.Tel,

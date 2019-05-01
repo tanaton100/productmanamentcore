@@ -20,31 +20,31 @@ namespace ProductmanagementCore.Repository
 
     public class ProductRepository : IProductRepository
     {
-        private IDbConnection _db { get; set; }
+        private IDbConnection Db { get; set; }
 
         public ProductRepository(IConfiguration configuration)
         {
             var connectionstring = configuration.GetSection("MsSqlConnectionString");
-            _db = new SqlConnection("Data Source = GEOGERR; Initial Catalog = PRODUCTM; Integrated Security = true;");
+            Db = new SqlConnection(connectionstring.Value);
         }
 
         public IEnumerable<Products> GetAll()
         {
-            return _db.Query<Products>("Select * From [PRODUCT] ").ToList();
+            return Db.Query<Products>("Select * From [PRODUCT] ").ToList();
         }
 
         public Products FindBy(int id)
         {
-            var sqlCommand = string.Format(@"SELECT * FROM [PRODUCT] WHERE[Id] = @Id");
-            return this._db.Query<Products>(sqlCommand, new
+            var sqlCommand = @"SELECT * FROM [PRODUCT] WHERE[Id] = @Id";
+            return this.Db.Query<Products>(sqlCommand, new
             {
                 id
             }).FirstOrDefault();
         }
         public int Add(Products entity)
         {
-            var sqlCommand = @"INSERT INTO [PRODUCT] ([Name],[Price]) VALUES (@Name,@Price)SELECT CAST(SCOPE_IDENTITY() as int)";
-            return this._db.ExecuteScalar<int>(sqlCommand, new
+            const string sqlCommand = @"INSERT INTO [PRODUCT] ([Name],[Price]) VALUES (@Name,@Price)SELECT CAST(SCOPE_IDENTITY() as int)";
+            return this.Db.ExecuteScalar<int>(sqlCommand, new
             {
                 entity.Id,
                 entity.Name,
@@ -54,8 +54,8 @@ namespace ProductmanagementCore.Repository
 
         public int Update(Products entity)
         {
-            var sqlCommand = string.Format(@"UPDATE [PRODUCT] SET [Name] = @Name ,[Price] = @Price where [Id] =@Id");
-            return this._db.Execute(sqlCommand, new
+            var sqlCommand = @"UPDATE [PRODUCT] SET [Name] = @Name ,[Price] = @Price where [Id] =@Id";
+            return this.Db.Execute(sqlCommand, new
             {
                 entity.Id,
                 entity.Name,
@@ -65,8 +65,8 @@ namespace ProductmanagementCore.Repository
 
         public int Delete(int id)
         {
-            var sqlCommand = string.Format(@"DELETE FROM [PRODUCT] WHERE [Id] = @Id");
-            return this._db.Execute(sqlCommand, new
+            var sqlCommand = @"DELETE FROM [PRODUCT] WHERE [Id] = @Id";
+            return this.Db.Execute(sqlCommand, new
             {
                 id
             });

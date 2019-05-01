@@ -12,14 +12,14 @@ namespace ProductmanagementCore.Services
 {
     public interface IUserService
     {
-        IEnumerable<Users> GetAllUserses();
+        IEnumerable<Users> GetAllUsers();
         Users GetByIdUsers(int id);
         Users AddUsers(Users users);
         Users UpdateUser(Users users);
         bool DeleteUserById(int id);
     }
 
-    public class UserService :IUserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
         private readonly IOrdersRepository _ordersRepository;
@@ -32,26 +32,24 @@ namespace ProductmanagementCore.Services
             _productRepository = new ProductRepository(configuration);
         }
 
-        public IEnumerable<Users> GetAllUserses()
+        public IEnumerable<Users> GetAllUsers()
         {
-            var result = _userRepository.GetAll();
-            var userId = result.Select(user => user.Id);
-            var order = _ordersRepository.GetAll();
-            var products = _productRepository.GetAll();
-            foreach (var id in userId)
+            var users = _userRepository.GetAll().ToList();
+        
+            var order = _ordersRepository.GetAll().ToList();
+            var products = _productRepository.GetAll().ToList();
+
+            foreach (var user in users)
             {
-                var userOrder = order.Where(o => o.IdUser == id);
-               
-                var productModel = userOrder.Select(orders => products.FirstOrDefault(p => p.Id == orders.IdProduct)).ToList();
-                foreach (var prod in result)
-                {
-                    prod.Products = productModel;
-                }
-  
+                var orderUser = order.Where(o => o.IdUser == user.Id);
+
+                var listProduct = products.Where(p => orderUser.Any(ou => ou.IdProduct == p.Id)).ToList();
+                user.Products = listProduct;
             }
-         
-            return result;
+
+            return users;
         }
+
 
         public Users GetByIdUsers(int id)
         {
@@ -63,7 +61,7 @@ namespace ProductmanagementCore.Services
             var checkDuplicate = ValidateUserNameExist(users);
 
             if (checkDuplicate)
-                throw new Exception("DupicateName");
+                throw new Exception("DuplicateName");
 
             var id = _userRepository.Add(users);
             users.Id = id;
@@ -75,37 +73,37 @@ namespace ProductmanagementCore.Services
             var checkDuplicate = ValidateUserNameExist(users);
 
             if (checkDuplicate)
-                throw new Exception("DupicateName");
+                throw new Exception("DuplicateName");
 
-            var result = _userRepository.Update(users)>0;
+            var result = _userRepository.Update(users) > 0;
             if (!result)
             {
                 throw new Exception("Cannot Update");
             }
 
-            var ViemResult = new Users
+            var viewResult = new Users
             {
                 Email = users.Email,
                 Id = users.Id,
                 Lastname = users.Lastname,
                 Username = users.Username,
-                Fristname = users.Fristname,
+                Firstname = users.Firstname,
                 Password = users.Password,
                 Products = users.Products,
                 Tel = users.Tel
             };
-            return ViemResult;
+            return viewResult;
         }
         public bool DeleteUserById(int id)
         {
-            return _userRepository.Delete(id)>0;
+            return _userRepository.Delete(id) > 0;
         }
 
 
         private bool ValidateUserNameExist(Users users)
         {
-            var userses = _userRepository.GetAll();
-            var duplicated = userses.Where(d => d.Username.ToLower().Trim() == users.Username.ToLower().Trim() && d.Id != users.Id);
+            var userList = _userRepository.GetAll();
+            var duplicated = userList.Where(d => d.Username.ToLower().Trim() == users.Username.ToLower().Trim() && d.Id != users.Id);
 
             return duplicated.Any();
         }

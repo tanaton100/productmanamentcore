@@ -24,7 +24,7 @@ namespace ProductmanagementCore.Controllers
         [Route("")]
         public IActionResult GetUser()
         {
-            var result = _userService.GetAllUserses();
+            var result = _userService.GetAllUsers();
             return Ok(result);
         }
 
@@ -44,7 +44,7 @@ namespace ProductmanagementCore.Controllers
             {
                 Lastname = users.Lastname,
                 Email = users.Email,
-                Fristname = users.Fristname,
+                Firstname = users.Fristname,
                 Password = users.Password,
                 Username = users.Username,
                 Tel = users.Tel
@@ -61,7 +61,7 @@ namespace ProductmanagementCore.Controllers
                 Id =id,
                 Lastname = users.Lastname,
                 Email = users.Email,
-                Fristname = users.Fristname,
+                Firstname = users.Fristname,
                 Password = users.Password,
                 Username = users.Username,
                 Tel = users.Tel
