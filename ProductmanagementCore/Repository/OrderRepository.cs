@@ -22,8 +22,10 @@ namespace ProductmanagementCore.Repository
 
     public class OrdersRepository : GenericReposiory<Orders>, IOrdersRepository
     {
+        private readonly IConfiguration _configuration;
         public OrdersRepository(IConfiguration configuration) : base(configuration)
         {
+            _configuration = configuration;
         }
 
         public override string CreateSeleteString()

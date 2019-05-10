@@ -25,11 +25,12 @@ namespace ProductmanagementCore.Services
         private readonly IOrdersRepository _ordersRepository;
         private readonly IProductRepository _productRepository;
 
-        public UserService(IConfiguration configuration)
+        public UserService(IUserRepository userRepository, IOrdersRepository ordersRepository,
+            IProductRepository productRepository)
         {
-            _userRepository = new UserRepository(configuration);
-            _ordersRepository = new OrdersRepository(configuration);
-            _productRepository = new ProductRepository(configuration);
+            _userRepository = userRepository;
+            _ordersRepository = ordersRepository;
+            _productRepository = productRepository;
         }
 
         public IEnumerable<Users> GetAllUsers()
@@ -113,8 +114,7 @@ namespace ProductmanagementCore.Services
             var user = _userRepository.FindById(id);
             var ordersUserId = _ordersRepository.FindByUserId(id);
             var products = _productRepository.GetAll();
-            var productModel = ordersUserId.Select(order => products.FirstOrDefault(p => p.Id == order.IdProduct)).ToList();
-
+            var productModel = ordersUserId.Select(order =>products.FirstOrDefault(p=>p.Id==order.IdProduct)).ToList();
             user.Products = productModel;
             return user;
         }

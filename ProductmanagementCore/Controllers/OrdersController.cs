@@ -15,9 +15,9 @@ namespace ProductmanagementCore.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly IOrdersService _ordersService;
-        public OrdersController(IConfiguration configuration)
+        public OrdersController(IOrdersService ordersService)
         {
-            _ordersService = new OrdersService(configuration);
+            _ordersService = ordersService;
         }
 
         [HttpGet]

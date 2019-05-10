@@ -15,9 +15,9 @@ namespace ProductmanagementCore.Controllers
     {
         private readonly IUserService _userService;
 
-        public UserController(IConfiguration configuration)
+        public UserController(IUserService userService)
         {
-            _userService = new UserService(configuration);
+            _userService = userService;
         }
 
         [HttpGet]

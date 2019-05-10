@@ -15,9 +15,10 @@ namespace ProductmanagementCore.Repository
     }
     public class UserRepository : GenericReposiory<Users>, IUserRepository
     {
-
+        private readonly IConfiguration _configuration;
         public UserRepository(IConfiguration configuration) : base(configuration)
         {
+            _configuration = configuration;
         }
         public override string CreateSeleteString()
         {

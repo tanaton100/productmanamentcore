@@ -22,9 +22,9 @@ namespace ProductmanagementCore.Services
     {
         private IOrdersRepository _ordersRepository;
 
-        public OrdersService( IConfiguration configuration)
+        public OrdersService(IOrdersRepository ordersRepository)
         {
-            _ordersRepository = new OrdersRepository(configuration);
+            _ordersRepository = ordersRepository;
 
         }
 
