@@ -43,8 +43,9 @@ namespace ProductmanagementCore.Services
             foreach (var user in users)
             {
                 var orderUser = order.Where(o => o.IdUser == user.Id);
-
+                var oRderUserProductId = orderUser.Select(t => t.IdProduct);
                 var listProduct = products.Where(p => orderUser.Any(ou => ou.IdProduct == p.Id)).ToList();
+                var list = products.Where(p => oRderUserProductId.Contains(p.Id));
                 user.Products = listProduct;
             }
 

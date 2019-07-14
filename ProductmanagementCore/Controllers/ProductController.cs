@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Mvc;
 using ProductmanagementCore.Models;
 using ProductmanagementCore.Models.ModelInput;
 using ProductmanagementCore.Services;
@@ -15,13 +10,13 @@ namespace ProductmanagementCore.Controllers
     {
         private readonly IProductService _productService;
 
-        public ProductController(IConfiguration configuration)
+        public ProductController(IProductService productService)
         {
-            _productService = new ProductService(configuration);
+            _productService = productService;
         }
         [HttpGet]
         [Route("")]
-        public IActionResult getUser()
+        public IActionResult GetUser()
         {
             var result = _productService.GetAll();
             return Ok(result);

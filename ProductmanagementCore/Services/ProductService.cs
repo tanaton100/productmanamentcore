@@ -22,9 +22,9 @@ namespace ProductmanagementCore.Services
     {
         private IProductRepository _productRepository;
 
-        public ProductService(IConfiguration configuration)
+        public ProductService(IProductRepository productRepository )
         {
-            _productRepository = new ProductRepository(configuration);
+            _productRepository = productRepository;
         }
         public IEnumerable<Products> GetAll()
         {
