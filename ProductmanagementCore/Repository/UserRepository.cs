@@ -27,8 +27,8 @@ namespace ProductmanagementCore.Repository
 
         public override async Task<int> AddAsync(Users tModel)
         {
-            var sqlCommand = @"INSERT INTO [Users] ([Username],[Fristname],[Lastname],[Email],[Tel])
-                            VALUES (@Username,@Fristname,@Lastname,@Email,@Tel)SELECT CAST(SCOPE_IDENTITY() as int)";
+            var sqlCommand = @"INSERT INTO [Users] ([Username],[Firstname],[Lastname],[Email],[Tel])
+                            VALUES (@Username,@Firstname,@Lastname,@Email,@Tel)SELECT CAST(SCOPE_IDENTITY() as int)";
 
             return await WithConnection(async conn =>
            {
@@ -58,7 +58,7 @@ namespace ProductmanagementCore.Repository
 
         public override async Task<int> UpdateAsync(Users tModel)
         {
-            var sqlCommand = string.Format(@"UPDATE [Users] SET [Username] = @Username ,[Fristname] = @Fristname ,[Lastname] =@Lastname ,[Email] =@Email ,[Tel] =@Tel,[Password] = @Password WHERE [Id] = @Id");
+            var sqlCommand = string.Format(@"UPDATE [Users] SET [Username] = @Username ,[Firstname] = @Firstname ,[Lastname] =@Lastname ,[Email] =@Email ,[Tel] =@Tel,[Password] = @Password WHERE [Id] = @Id");
 
 
             return await WithConnection(async conn =>
