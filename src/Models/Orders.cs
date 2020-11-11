@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 
 namespace ProductmanagementCore.Models
 {
-    public class Products
+    public class Orders
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Price { get; set; }
+        public int ProductId { get; set; }
+        public int UserId { get; set; }
+
+
     }
 }
