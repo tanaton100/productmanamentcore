@@ -8,6 +8,6 @@ namespace ProductmanagementCore.Models.ModelInput
     public class ProductInput
     {
         public string Name { get; set; }
-        public string Price { get; set; }
+        public decimal Price { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using ProductmanagementCore.Models;
 using ProductmanagementCore.Models.ModelInput;
 using ProductmanagementCore.Services;
+using System.Threading.Tasks;
 
 namespace ProductmanagementCore.Controllers
 {
@@ -17,39 +18,38 @@ namespace ProductmanagementCore.Controllers
 
         [HttpGet]
         [Route("")]
-        public IActionResult GetUser()
+        public async Task<IActionResult> GetUser()
         {
-            var result = _userService.GetAllUsers();
+            var result = await _userService.GetAllUsers();
             return Ok(result);
         }
 
         [HttpGet]
         [Route("{id}")]
-        public IActionResult GetUser([FromRoute]int id)
+        public async Task<IActionResult> GetUser([FromRoute]int id)
         {
-            var result = _userService.GetByIdUsers(id);
+            var result = await _userService.GetByIdUsers(id);
             return Ok(result);
         }
 
         [HttpPost]
         [Route("")]
-        public IActionResult AddUser([FromBody]UserInputModel users)
+        public async Task<IActionResult> AddUser([FromBody]UserInputModel users)
         {
             var input = new Users
             {
                 Lastname = users.Lastname,
                 Email = users.Email,
                 Firstname = users.Fristname,
-                Password = users.Password,
                 Username = users.Username,
                 Tel = users.Tel
             };
-            var result = _userService.AddUsers(input);
-            return Ok(result);
+            var result = await _userService.AddUsers(input);
+            return Accepted(result);
         }
         [HttpPut]
         [Route("{id}")]
-        public IActionResult UpdateUser([FromRoute]int id, [FromBody]UserInputModel users)
+        public async Task<IActionResult> UpdateUser([FromRoute]int id, [FromBody]UserInputModel users)
         {
             var input = new Users
             {
@@ -57,20 +57,19 @@ namespace ProductmanagementCore.Controllers
                 Lastname = users.Lastname,
                 Email = users.Email,
                 Firstname = users.Fristname,
-                Password = users.Password,
                 Username = users.Username,
                 Tel = users.Tel
             };
-            var result = _userService.UpdateUser(input);
-            return Ok(result);
+            var result = await  _userService.UpdateUser(input);
+            return Accepted(result);
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult DeleteUser([FromRoute]int id)
+        public async Task<IActionResult> DeleteUser([FromRoute]int id)
         {
-            var result = _userService.DeleteUserById(id);
-            return Ok(result);
+            var result = await _userService.DeleteUserById(id);
+            return Accepted(result);
         }
     }
 }

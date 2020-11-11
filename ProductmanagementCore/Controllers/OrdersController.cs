@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ProductmanagementCore.Models;
 using ProductmanagementCore.Models.ModelInput;
@@ -17,50 +18,50 @@ namespace ProductmanagementCore.Controllers
 
         [HttpGet]
         [Route("getall")]
-        public IEnumerable<Orders> GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var result = _ordersService.GetAllOrder();
-            return result;
+            return Ok(await _ordersService.GetAllOrder());
+
         }
 
         [HttpGet]
         [Route("{id}")]
-        public Orders GetById([FromRoute]int id)
+        public async ValueTask<IActionResult> GetById([FromRoute]int id)
         {
-            var result = _ordersService.GetByIdOrders(id);
-            return result;
+            return Ok(await _ordersService.GetByIdOrders(id));
+
         }
 
         [HttpPost]
         [Route("")]
-        public Orders AddOrders([FromBody] OrderInput orders)
+        public async Task<IActionResult> AddOrders([FromBody] OrderInput orders)
         {
             var modelInput = new Orders
             {
                 ProductId = orders.IdProduct,
                 UserId = orders.IdUser
             };
-            var result = _ordersService.AddOrders(modelInput);
-            return result;
+            var result = await _ordersService.AddOrders(modelInput);
+            return Accepted(result);
         }
 
 
         [HttpPut]
         [Route("")]
-        public bool UpdateOrders([FromBody] Orders orders)
+        public async Task<IActionResult> UpdateOrders([FromBody] Orders orders)
         {
           
-            var result = _ordersService.Update(orders);
-            return result;
+            var result = await _ordersService.Update(orders);
+            return Accepted(result);
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public bool DeleteOrders([FromRoute] int id)
+        public async Task<IActionResult> DeleteOrders([FromRoute] int id)
         {
 
-            var result = _ordersService.Delete(id);
-            return result;
+            var result = await _ordersService.Delete(id);
+            return Accepted(result);
         }
     }
 }

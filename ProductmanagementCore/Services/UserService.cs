@@ -87,7 +87,6 @@ namespace ProductmanagementCore.Services
                 Lastname = users.Lastname,
                 Username = users.Username,
                 Firstname = users.Firstname,
-                Password = users.Password,
                 Products = users.Products,
                 Tel = users.Tel
             };

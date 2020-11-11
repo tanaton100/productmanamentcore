@@ -2,6 +2,7 @@
 using ProductmanagementCore.Models;
 using ProductmanagementCore.Models.ModelInput;
 using ProductmanagementCore.Services;
+using System.Threading.Tasks;
 
 namespace ProductmanagementCore.Controllers
 {
@@ -16,35 +17,35 @@ namespace ProductmanagementCore.Controllers
         }
         [HttpGet]
         [Route("")]
-        public IActionResult GetUser()
+        public async Task<IActionResult> GetUser()
         {
-            var result = _productService.GetAll();
+            var result = await _productService.GetAll();
             return Ok(result);
         }
 
         [HttpGet]
         [Route("{id}")]
-        public IActionResult GetId([FromRoute]int id)
+        public async Task <IActionResult> GetId([FromRoute]int id)
         {
-            return Ok(_productService.FindById(id));
+            return Ok(await _productService.FindById(id));
         }
 
 
         [HttpPost]
         [Route("")]
-        public IActionResult Post([FromBody]ProductInput product)
+        public async Task<IActionResult> Post([FromBody]ProductInput product)
         {
             var inputUpdate = new Products
             {
                 Price = product.Price,
                 Name = product.Name
             };
-            return Ok(_productService.Add(inputUpdate));
+            return Ok(await _productService.Add(inputUpdate));
         }
 
         [HttpPut]
         [Route("{id}")]
-        public IActionResult Put([FromRoute]int id,[FromBody]ProductInput product)
+        public async Task<IActionResult> Put([FromRoute]int id,[FromBody]ProductInput product)
         {
             var inputUpdate = new Products
             {
@@ -52,14 +53,14 @@ namespace ProductmanagementCore.Controllers
                 Price = product.Price,
                 Name = product.Name
             };
-            return Ok(_productService.Update(inputUpdate));
+            return Ok(await _productService.Update(inputUpdate));
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-           var result = _productService.Delete(id);
+           var result = await _productService.Delete(id);
             return Ok(result);
         }
     }

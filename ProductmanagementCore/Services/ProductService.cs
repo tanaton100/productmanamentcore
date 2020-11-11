@@ -35,7 +35,7 @@ namespace ProductmanagementCore.Services
 
         public async Task<Products> Add(Products product)
         {
-            var result = await _productRepository.Add(product);
+            var result = await _productRepository.AddAsync(product);
             if (result == 0)
             {
                 throw new Exception("Cannot Add");
@@ -47,7 +47,7 @@ namespace ProductmanagementCore.Services
 
         public async Task<Products> Update(Products product)
         {
-            var result = await _productRepository.Update(product) > 0;
+            var result = await _productRepository.UpdateAsync(product) > 0;
             if (!result)
             {
                 throw new Exception("cannot Update");
@@ -64,7 +64,7 @@ namespace ProductmanagementCore.Services
 
         public async Task <bool> Delete(int id)
         {
-            return await _productRepository.Delete(id) > 0;
+            return await _productRepository.DeleteAsync(id) > 0;
         }
     }
 }

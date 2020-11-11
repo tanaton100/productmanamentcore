@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
@@ -14,62 +10,60 @@ namespace ProductmanagementCore.Repository
     {
         Task<IEnumerable<Products>> GetAll();
         Task<Products> FindById(int id);
-        Task<int> Add(Products entity);
-        Task<int> Update(Products entity);
-        Task<int> Delete(int id);
+        Task<int> AddAsync(Products entity);
+        Task<int> UpdateAsync(Products entity);
+        Task<int> DeleteAsync(int id);
     }
 
-    public class ProductRepository : IProductRepository
+    public class ProductRepository : GenericReposiory<Products>,IProductRepository
     {
-        private IDbConnection Db { get; set; }
 
-        public ProductRepository(IConfiguration configuration)
+        public ProductRepository(IConfiguration configuration) : base(configuration)
         {
-            var connectionstring = configuration.GetSection("MsSqlConnectionString");
-            Db = new SqlConnection(connectionstring.Value);
+           
         }
 
-        public async Task< IEnumerable<Products>> GetAll()
+        public override string CreateSeleteString()
         {
-            return await Db.QueryAsync<Products>("Select * From [PRODUCT] ");
+            return "SELECT * FROM [Orders] ";
         }
 
-        public async Task<Products> FindById(int id)
-        {
-            var sqlCommand = @"SELECT * FROM [PRODUCT] WHERE[Id] = @Id";
-            return await Db.QueryFirstOrDefaultAsync<Products>(sqlCommand, new
-            {
-                id
-            });
-        }
-        public async Task< int> Add(Products entity)
+
+
+        public override async Task< int> AddAsync(Products entity)
         {
             const string sqlCommand = @"INSERT INTO [PRODUCT] ([Name],[Price]) VALUES (@Name,@Price)SELECT CAST(SCOPE_IDENTITY() as int)";
-            return await Db.ExecuteScalarAsync<int>(sqlCommand, new
+            return await WithConnection(async conn =>
             {
-                entity.Id,
-                entity.Name,
-                entity.Price
+                return await conn.ExecuteScalarAsync<int>(sqlCommand, new
+                {
+                    entity.Id,
+                    entity.Name,
+                    entity.Price
+                });
             });
         }
 
-        public async Task< int> Update(Products entity)
+        public override async Task<int> UpdateAsync(Products entity)
         {
             var sqlCommand = @"UPDATE [PRODUCT] SET [Name] = @Name ,[Price] = @Price where [Id] =@Id";
-            return await Db.ExecuteAsync(sqlCommand, new
+            return await WithConnection(async conn =>
             {
-                entity.Id,
-                entity.Name,
-                entity.Price
+                return await conn.ExecuteAsync(sqlCommand, new
+                {
+                    entity.Id,
+                    entity.Name,
+                    entity.Price
+                });
             });
         }
 
-        public async Task<int> Delete(int id)
+        public override async Task<int> DeleteAsync(int id)
         {
             var sqlCommand = @"DELETE FROM [PRODUCT] WHERE [Id] = @Id";
-            return await Db.ExecuteAsync(sqlCommand, new
+            return await WithConnection(async conn =>
             {
-                id
+                return await conn.ExecuteAsync(sqlCommand, new { Id = id });
             });
         }
     }

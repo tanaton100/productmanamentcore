@@ -1,16 +1,12 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using ProductmanagementCore.Repository;
 using ProductmanagementCore.Services;
-using Swashbuckle.AspNetCore.Swagger;
 
 namespace ProductmanagementCore
 {
@@ -26,11 +22,20 @@ namespace ProductmanagementCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext.AppContext>(options =>
-                                    options.UseSqlServer(
-                                        Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDbContext<DataContext.AppContext>(options =>
+            //                        options.UseSqlServer(
+            //                            Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddMvc();
+            //services.AddMvc();
+            services.AddControllers();
+            services.AddSwaggerGen();
+            //services.AddSwaggerGen(c => { //<-- NOTE 'Add' instead of 'Configure'
+            //    c.SwaggerDoc("v1", new OpenApiInfo
+            //    {
+            //        Title = "Product",
+            //        Version = "v1"
+            //    });
+            //});
 
         }
 
@@ -66,10 +71,12 @@ namespace ProductmanagementCore
                 c.RoutePrefix = string.Empty;
             });
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseCookiePolicy();
-            app.UseMvc(routes => { routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}"); });
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+
         }
     }
 }
