@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using ProductmanagementCore.Models;
@@ -7,11 +8,11 @@ namespace ProductmanagementCore.Repository
 {
     public interface IUserRepository
     {
-        int Add(Users tModel);
-        int Delete(int id);
-        IEnumerable<Users> GetAll();
-        Users FindById(int id);
-        int Update(Users tUsers);
+        Task<int> AddAsync(Users tModel);
+        Task<int> DeleteAsync(int id);
+        Task<IEnumerable<Users>> GetAll();
+        Task<Users> FindById(int id);
+        Task<int> UpdateAsync(Users tUsers);
     }
     public class UserRepository : GenericReposiory<Users>, IUserRepository
     {
@@ -25,12 +26,12 @@ namespace ProductmanagementCore.Repository
             return "SELECT * FROM [Users] ";
         }
 
-        public override int Add(Users tModel)
+        public override async Task <int> AddAsync(Users tModel)
         {
             var sqlCommand = @"INSERT INTO [Users] ([Username],[Fristname],[Lastname],[Email],[Tel],[Password])
                             VALUES (@Username,@Fristname,@Lastname,@Email,@Tel,@Password)SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            var resut = DbConnection.ExecuteScalar<int>(sqlCommand, new
+            var resut = await DbConnection.ExecuteScalarAsync<int>(sqlCommand, new
             {
                 tModel.Id,
                 tModel.Email,
@@ -44,19 +45,19 @@ namespace ProductmanagementCore.Repository
             return resut;
         }
 
-        public override int Delete(int id)
+        public override async Task<int> DeleteAsync(int id)
         {
             var sqlCommand = string.Format(@"DELETE FROM [Users] WHERE [Id] = @Id");
-            return this.DbConnection.Execute(sqlCommand, new
+            return await DbConnection.ExecuteAsync(sqlCommand, new
             {
-                 id
+                id
             });
         }
 
-        public override int Update(Users tModel)
+        public override async Task<int> UpdateAsync(Users tModel)
         {
             var sqlCommand = string.Format(@"UPDATE [Users] SET [Username] = @Username ,[Fristname] = @Fristname ,[Lastname] =@Lastname ,[Email] =@Email ,[Tel] =@Tel,[Password] = @Password WHERE [Id] = @Id");
-            return this.DbConnection.Execute(sqlCommand, new
+            return await DbConnection.ExecuteAsync(sqlCommand, new
             {
                 tModel.Id,
                 tModel.Username,

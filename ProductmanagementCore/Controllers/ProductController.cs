@@ -6,7 +6,7 @@ using ProductmanagementCore.Services;
 namespace ProductmanagementCore.Controllers
 {
     [Route("api/Product")]
-    public class ProductController : Controller
+    public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
 

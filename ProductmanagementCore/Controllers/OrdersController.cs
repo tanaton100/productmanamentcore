@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using ProductmanagementCore.Models;
 using ProductmanagementCore.Models.ModelInput;
 using ProductmanagementCore.Services;
@@ -42,8 +37,8 @@ namespace ProductmanagementCore.Controllers
         {
             var modelInput = new Orders
             {
-                IdProduct = orders.IdProduct,
-                IdUser = orders.IdUser
+                ProductId = orders.IdProduct,
+                UserId = orders.IdUser
             };
             var result = _ordersService.AddOrders(modelInput);
             return result;

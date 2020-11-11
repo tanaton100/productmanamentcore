@@ -21,24 +21,24 @@ namespace ProductmanagementCore.Repository
             DbConnection = new SqlConnection(connectionstring.Value);
         }
 
-        public IEnumerable<TModel> GetAll()
+        public async Task<IEnumerable<TModel>> GetAll()
         {
 
-            return DbConnection.Query<TModel>(CreateSeleteString()).ToList();
+            return await DbConnection.QueryAsync<TModel>(CreateSeleteString());
         }
 
-        public TModel FindById(int id)
+        public async Task<TModel> FindById(int id)
         {
-            return this.DbConnection.Query<TModel>(CreateSeleteString() + " WHERE Id = @Id", new
+            return await DbConnection.QueryFirstAsync<TModel>(CreateSeleteString() + " WHERE Id = @Id", new
             {
                 id
-            }).FirstOrDefault();
+            });
         }
 
         public abstract string CreateSeleteString();
-        public abstract int Update(TModel tModel);
-        public abstract int Delete(int id);
-        public abstract int Add(TModel tModel);
+        public abstract Task<int> UpdateAsync(TModel tModel);
+        public abstract Task<int> DeleteAsync(int id);
+        public abstract Task<int> AddAsync(TModel tModel);
     }
-    
+
 }

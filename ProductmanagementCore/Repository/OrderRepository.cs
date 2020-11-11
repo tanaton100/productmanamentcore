@@ -1,9 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using ProductmanagementCore.Models;
-
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -12,12 +9,12 @@ namespace ProductmanagementCore.Repository
 {
     public interface IOrdersRepository
     {
-        IEnumerable<Orders> GetAll();
-        Orders FindById(int id);
-        int Delete(int entity);
-        int Update(Orders entity);
-        int Add(Orders tModel);
-        IEnumerable<Orders> FindByUserId(int id);
+        Task<IEnumerable<Orders>> GetAll();
+        Task<Orders> FindById(int id);
+        Task<int> DeleteAsync(int entity);
+        Task<int> UpdateAsync(Orders entity);
+        Task<int> AddAsync(Orders tModel);
+        Task<IEnumerable<Orders>> FindByUserId(int id);
     }
 
     public class OrdersRepository : GenericReposiory<Orders>, IOrdersRepository
@@ -33,43 +30,43 @@ namespace ProductmanagementCore.Repository
             return "SELECT * FROM [Orders] ";
         }
 
-        public override int Delete(int id)
+        public override async Task<int> DeleteAsync(int id)
         {
             var sqlCommand = string.Format(@"DELETE FROM [Orders] WHERE [Id] = @Id");
-            return this.DbConnection.Execute(sqlCommand, new
+            return await DbConnection.ExecuteAsync(sqlCommand, new
             {
                 id
 
             });
         }
-        public IEnumerable<Orders> FindByUserId(int id)
+        public async Task<IEnumerable<Orders>> FindByUserId(int id)
         {
             var sqlCommand = string.Format(@"SELECT * FROM [Orders] WHERE [IdUser] = @IdUser");
-            return this.DbConnection.Query<Orders>(sqlCommand, new
+            return await DbConnection.QueryAsync<Orders>(sqlCommand, new
             {
                 IdUser = id
-            }).ToList();
+            });
         }
-        public override int Update(Orders entity)
+        public override async Task<int> UpdateAsync(Orders entity)
         {
             var sqlCommand = string.Format(@"UPDATE [Orders] SET [IdProduct] = @IdProduct ,[IdUser] = @IdUser where [Id] =@Id");
-            return this.DbConnection.Execute(sqlCommand, new
+            return await DbConnection.ExecuteAsync(sqlCommand, new
             {
                 entity.Id,
-                entity.IdProduct,
-                entity.IdUser
+                entity.ProductId,
+                entity.UserId
             });
         }
 
-        public override int Add(Orders tModel)
+        public override async Task<int> AddAsync(Orders tModel)
         {
             var sqlCommand = @"INSERT INTO [Orders] ([IdProduct],[IdUser]) VALUES (@IdProduct,@IdUser)SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            var resut = DbConnection.ExecuteScalar<int>(sqlCommand, new
+            var resut = await DbConnection.ExecuteScalarAsync<int>(sqlCommand, new
             {
                 tModel.Id,
-                tModel.IdProduct,
-                tModel.IdUser
+                tModel.ProductId,
+                tModel.UserId
             });
             tModel.Id = resut;
             return resut;

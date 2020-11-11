@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using Microsoft.Extensions.Configuration;
 using ProductmanagementCore.Models;
 using ProductmanagementCore.Repository;
 
@@ -11,46 +8,46 @@ namespace ProductmanagementCore.Services
 {
     public interface IProductService
     {
-        IEnumerable<Products> GetAll();
-        Products FindById(int id);
-        Products Add(Products product);
-        Products Update(Products product);
-        bool Delete(int id);
+        Task<IEnumerable<Products>> GetAll();
+        Task<Products> FindById(int id);
+        Task<Products> Add(Products product);
+        Task<Products> Update(Products product);
+        Task<bool> Delete(int id);
     }
 
     public class ProductService : IProductService
     {
         private IProductRepository _productRepository;
 
-        public ProductService(IProductRepository productRepository )
+        public ProductService(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }
-        public IEnumerable<Products> GetAll()
+        public async Task<IEnumerable<Products>> GetAll()
         {
-            return _productRepository.GetAll();
+            return await _productRepository.GetAll();
         }
 
-        public Products FindById(int id)
+        public async Task<Products> FindById(int id)
         {
-            return _productRepository.FindBy(id);
+            return await _productRepository.FindById(id);
         }
 
-        public Products Add(Products product)
+        public async Task<Products> Add(Products product)
         {
-            var result = _productRepository.Add(product);
-            if (result==0)
+            var result = await _productRepository.Add(product);
+            if (result == 0)
             {
-                throw new  Exception("Cannot Add");
+                throw new Exception("Cannot Add");
             }
             product.Id = result;
             return result > 0 ? product : new Products();
 
         }
 
-        public Products Update(Products product)
+        public async Task<Products> Update(Products product)
         {
-            var result = _productRepository.Update(product)>0;
+            var result = await _productRepository.Update(product) > 0;
             if (!result)
             {
                 throw new Exception("cannot Update");
@@ -65,9 +62,9 @@ namespace ProductmanagementCore.Services
             return responesProduct;
         }
 
-        public bool Delete(int id)
+        public async Task <bool> Delete(int id)
         {
-            return _productRepository.Delete(id) > 0;
+            return await _productRepository.Delete(id) > 0;
         }
     }
 }

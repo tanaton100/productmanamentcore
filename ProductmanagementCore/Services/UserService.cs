@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using ProductmanagementCore.Models;
 using ProductmanagementCore.Repository;
-using ServiceStack;
 using System.Data;
+using System.Threading.Tasks;
 
 namespace ProductmanagementCore.Services
 {
     public interface IUserService
     {
-        IEnumerable<Users> GetAllUsers();
-        Users GetByIdUsers(int id);
-        Users AddUsers(Users users);
-        Users UpdateUser(Users users);
-        bool DeleteUserById(int id);
+        Task<IEnumerable<Users>> GetAllUsers();
+        Task<Users> GetByIdUsers(int id);
+        Task<Users> AddUsers(Users users);
+        Task<Users> UpdateUser(Users users);
+        Task<bool> DeleteUserById(int id);
     }
 
     public class UserService : IUserService
@@ -33,18 +31,17 @@ namespace ProductmanagementCore.Services
             _productRepository = productRepository;
         }
 
-        public IEnumerable<Users> GetAllUsers()
+        public async Task<IEnumerable<Users>> GetAllUsers()
         {
-            var users = _userRepository.GetAll().ToList();
-        
-            var order = _ordersRepository.GetAll().ToList();
-            var products = _productRepository.GetAll().ToList();
+            var users = await _userRepository.GetAll();
+            var order = await _ordersRepository.GetAll();
+            var products = await _productRepository.GetAll();
 
             foreach (var user in users)
             {
-                var orderUser = order.Where(o => o.IdUser == user.Id);
-                var oRderUserProductId = orderUser.Select(t => t.IdProduct);
-                var listProduct = products.Where(p => orderUser.Any(ou => ou.IdProduct == p.Id)).ToList();
+                var orderUser = order.Where(o => o.UserId == user.Id);
+                var oRderUserProductId = orderUser.Select(t => t.ProductId);
+                var listProduct = products.Where(p => orderUser.Any(ou => ou.ProductId == p.Id)).ToList();
                 var list = products.Where(p => oRderUserProductId.Contains(p.Id));
                 user.Products = listProduct;
             }
@@ -53,31 +50,31 @@ namespace ProductmanagementCore.Services
         }
 
 
-        public Users GetByIdUsers(int id)
+        public async Task<Users> GetByIdUsers(int id)
         {
-            return _userRepository.FindById(id);
+            return await _userRepository.FindById(id);
         }
 
-        public Users AddUsers(Users users)
+        public async Task<Users> AddUsers(Users users)
         {
-            var checkDuplicate = ValidateUserNameExist(users);
+            var checkDuplicate =await ValidateUserNameExist(users);
 
             if (checkDuplicate)
                 throw new Exception("DuplicateName");
 
-            var id = _userRepository.Add(users);
+            var id = await _userRepository.AddAsync(users);
             users.Id = id;
             return id > 0 ? users : new Users();
         }
 
-        public Users UpdateUser(Users users)
+        public async Task<Users> UpdateUser(Users users)
         {
-            var checkDuplicate = ValidateUserNameExist(users);
+            var checkDuplicate = await ValidateUserNameExist(users);
 
             if (checkDuplicate)
                 throw new Exception("DuplicateName");
 
-            var result = _userRepository.Update(users) > 0;
+            var result = await _userRepository.UpdateAsync(users) > 0;
             if (!result)
             {
                 throw new Exception("Cannot Update");
@@ -96,26 +93,26 @@ namespace ProductmanagementCore.Services
             };
             return viewResult;
         }
-        public bool DeleteUserById(int id)
+        public async Task<bool> DeleteUserById(int id)
         {
-            return _userRepository.Delete(id) > 0;
+            return await _userRepository.DeleteAsync(id) > 0;
         }
 
 
-        private bool ValidateUserNameExist(Users users)
+        private async Task<bool> ValidateUserNameExist(Users users)
         {
-            var userList = _userRepository.GetAll();
+            var userList = await _userRepository.GetAll();
             var duplicated = userList.Where(d => d.Username.ToLower().Trim() == users.Username.ToLower().Trim() && d.Id != users.Id);
 
             return duplicated.Any();
         }
 
-        public Users GetProductsWithUser(int id)
+        public async Task<Users> GetProductsWithUser(int id)
         {
-            var user = _userRepository.FindById(id);
-            var ordersUserId = _ordersRepository.FindByUserId(id);
-            var products = _productRepository.GetAll();
-            var productModel = ordersUserId.Select(order =>products.FirstOrDefault(p=>p.Id==order.IdProduct)).ToList();
+            var user = await _userRepository.FindById(id);
+            var ordersUserId = await _ordersRepository.FindByUserId(id);
+            var products = await _productRepository.GetAll();
+            var productModel = ordersUserId.Select(order => products.FirstOrDefault(p => p.Id == order.ProductId)).ToList();
             user.Products = productModel;
             return user;
         }

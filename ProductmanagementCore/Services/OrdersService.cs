@@ -1,24 +1,21 @@
 ﻿using ProductmanagementCore.Repository;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using ProductmanagementCore.Models;
 
 namespace ProductmanagementCore.Services
 {
     public interface IOrdersService
     {
-        IEnumerable<Orders> GetAllOrder();
-        Orders GetByIdOrders(int id);
-        Orders AddOrders(Orders orders);
-        bool Update(Orders orders);
-        bool Delete(int id);
-        IEnumerable<Orders> FindbyUserId(int id);
+        Task<IEnumerable<Orders>> GetAllOrder();
+        ValueTask<Orders> GetByIdOrders(int id);
+        Task<Orders> AddOrders(Orders orders);
+        Task<bool> Update(Orders orders);
+        Task<bool> Delete(int id);
+        Task<IEnumerable<Orders>> FindbyUserId(int id);
     }
 
-    public class OrdersService: IOrdersService
+    public class OrdersService : IOrdersService
     {
         private IOrdersRepository _ordersRepository;
 
@@ -28,35 +25,35 @@ namespace ProductmanagementCore.Services
 
         }
 
-        public IEnumerable<Orders> GetAllOrder()
+        public async Task<IEnumerable<Orders>> GetAllOrder()
         {
-            return _ordersRepository.GetAll().ToList();
+            return await _ordersRepository.GetAll();
         }
 
-        public Orders GetByIdOrders(int id)
+        public async ValueTask<Orders> GetByIdOrders(int id)
         {
-            return _ordersRepository.FindById(id);
+            return await _ordersRepository.FindById(id);
         }
 
-        public Orders AddOrders(Orders orders)
-        {   
-            var id = _ordersRepository.Add(orders);
+        public async Task<Orders> AddOrders(Orders orders)
+        {
+            var id = await _ordersRepository.AddAsync(orders);
             orders.Id = id;
             return id > 0 ? orders : new Orders();
         }
 
-        public bool Update(Orders orders)
+        public async Task<bool> Update(Orders orders)
         {
-            return _ordersRepository.Update(orders)>0;
+            return (await _ordersRepository.UpdateAsync(orders)) > 0;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            return _ordersRepository.Delete(id) > 0;
+            return (await _ordersRepository.DeleteAsync(id)) > 0;
         }
-        public IEnumerable<Orders> FindbyUserId(int id)
+        public async Task <IEnumerable<Orders>> FindbyUserId(int id)
         {
-            return _ordersRepository.FindByUserId(id);
+            return await _ordersRepository.FindByUserId(id);
         }
     }
 }
