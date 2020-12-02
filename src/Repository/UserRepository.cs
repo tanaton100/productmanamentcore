@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,7 @@ namespace ProductmanagementCore.Repository
         ValueTask<IEnumerable<Users>> GetAll();
         ValueTask<Users> FindById(int id);
         ValueTask<int> UpdateAsync(Users tUsers);
+        ValueTask<IEnumerable<Users>> QueryBy(Expression<System.Func<Users, bool>> predicate);
     }
     public class UserRepository : GenericReposiory<Users>, IUserRepository
     {
@@ -73,6 +75,11 @@ namespace ProductmanagementCore.Repository
                     tModel.Tel,
                 });
             });
+        }
+
+        public override ValueTask<IEnumerable<Users>> QueryBy(Expression<System.Func<Users, bool>> predicate)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

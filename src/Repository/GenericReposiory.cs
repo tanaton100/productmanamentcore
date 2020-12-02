@@ -108,6 +108,7 @@ namespace ProductmanagementCore.Repository
         public abstract ValueTask<int> UpdateAsync(TModel tModel);
         public abstract ValueTask<int> DeleteAsync(int id);
         public abstract ValueTask<int> AddAsync(TModel tModel);
+        public abstract ValueTask<IEnumerable<TModel>> QueryBy(Expression<Func<TModel, bool>> predicate);
     }
 
 }
