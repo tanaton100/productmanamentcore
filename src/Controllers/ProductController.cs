@@ -17,9 +17,10 @@ namespace ProductmanagementCore.Controllers
         }
         [HttpGet]
         [Route("")]
-        public async Task<IActionResult> GetUser()
+        public async Task<IActionResult> GetProduct()
         {
             var result = await _productService.GetAll();
+            var x = await _productService.QueryBy(_ => _.Price == 10);
             return Ok(result);
         }
 
