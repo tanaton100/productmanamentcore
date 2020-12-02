@@ -8,12 +8,12 @@ namespace ProductmanagementCore.Repository
 {
     public interface IOrdersRepository
     {
-        Task<IEnumerable<Orders>> GetAll();
-        Task<Orders> FindById(int id);
-        Task<int> DeleteAsync(int entity);
-        Task<int> UpdateAsync(Orders entity);
-        Task<int> AddAsync(Orders entity);
-        Task<IEnumerable<Orders>> FindByUserId(int id);
+        ValueTask<IEnumerable<Orders>> GetAll();
+        ValueTask<Orders> FindById(int id);
+        ValueTask<int> DeleteAsync(int entity);
+        ValueTask<int> UpdateAsync(Orders entity);
+        ValueTask<int> AddAsync(Orders entity);
+        ValueTask<IEnumerable<Orders>> FindByUserId(int id);
     }
 
     public class OrdersRepository : GenericReposiory<Orders>, IOrdersRepository
@@ -27,7 +27,7 @@ namespace ProductmanagementCore.Repository
             return "SELECT * FROM [Orders] ";
         }
 
-        public override async Task<int> DeleteAsync(int id)
+        public override async ValueTask<int> DeleteAsync(int id)
         {
             var sqlCommand = string.Format(@"DELETE FROM [Orders] WHERE [Id] = @Id");
             return await WithConnection(async conn =>
@@ -35,7 +35,7 @@ namespace ProductmanagementCore.Repository
                  return await conn.ExecuteAsync(sqlCommand, new { Id = id });
              });
         }
-        public async Task<IEnumerable<Orders>> FindByUserId(int id)
+        public async ValueTask<IEnumerable<Orders>> FindByUserId(int id)
         {
             var sqlCommand = string.Format(@"SELECT * FROM [Orders] WHERE [UserId] = @UserId");
 
@@ -44,7 +44,7 @@ namespace ProductmanagementCore.Repository
                 return await conn.QueryAsync<Orders>(sqlCommand, new { Id = id });
             });
         }
-        public override async Task<int> UpdateAsync(Orders entity)
+        public override async ValueTask<int> UpdateAsync(Orders entity)
         {
             var sqlCommand = string.Format(@"UPDATE [Orders] SET [ProductId] = @ProductId ,[UserId] = @UserId where [Id] =@Id");
             return await WithConnection(async conn =>
@@ -58,7 +58,7 @@ namespace ProductmanagementCore.Repository
             });
         }
 
-        public override async Task<int> AddAsync(Orders entity)
+        public override async ValueTask<int> AddAsync(Orders entity)
         {
             var sqlCommand = @"INSERT INTO [Orders] ([ProductId],[UserId]) VALUES (@ProductId,@UserId)SELECT CAST(SCOPE_IDENTITY() as int)";
 
