@@ -27,7 +27,7 @@ namespace ProductmanagementCore.Controllers
         [Route("{id}")]
         public async Task <IActionResult> GetId([FromRoute]int id)
         {
-            return Ok(await _productService.FindById(id));
+            return Ok(await _productService.QueryBy(p =>p.Id==id));
         }
 
 

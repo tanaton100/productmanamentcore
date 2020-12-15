@@ -16,7 +16,7 @@ namespace ProductmanagementCore.Repository
         ValueTask<int> AddAsync(Products entity);
         ValueTask<int> UpdateAsync(Products entity);
         ValueTask<int> DeleteAsync(int id);
-        ValueTask<IQueryable<Products>> QueryBy(Expression<Func<Products, bool>> predicate);
+        ValueTask<IQueryable<Products>> QueryBy(Func<Products, bool> predicate);
     }
 
     public class ProductRepository : GenericReposiory<Products>,IProductRepository
@@ -71,13 +71,13 @@ namespace ProductmanagementCore.Repository
             });
         }
 
-        public override async ValueTask<IQueryable<Products>> QueryBy(Expression<Func<Products, bool>> predicate)
+        public override async ValueTask<IQueryable<Products>> QueryBy(Func<Products, bool> predicate)
         {
 
 
             return await WithConnection(async conn =>
             {
-                return (await conn.QueryAsync<Products>(CreateSeleteString(), predicate)).AsQueryable();
+                return (await conn.QueryAsync<Products>(CreateSeleteString(), null)).Where(predicate).AsQueryable();
             });
         }
     }
