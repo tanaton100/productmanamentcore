@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Dapper;
 using System.Linq.Expressions;
 using System;
+using System.Linq;
 
 namespace ProductmanagementCore.Repository
 {
@@ -16,7 +17,7 @@ namespace ProductmanagementCore.Repository
         ValueTask<int> UpdateAsync(Orders entity);
         ValueTask<int> AddAsync(Orders entity);
         ValueTask<IEnumerable<Orders>> FindByUserId(int id);
-        ValueTask<IEnumerable<Orders>> QueryBy(Expression<Func<Orders, bool>> predicate);
+        ValueTask<IQueryable<Orders>> QueryBy(Expression<Func<Orders, bool>> predicate);
 
     }
 
@@ -77,7 +78,7 @@ namespace ProductmanagementCore.Repository
             });
         }
 
-        public override ValueTask<IEnumerable<Orders>> QueryBy(Expression<System.Func<Orders, bool>> predicate)
+        public override ValueTask<IQueryable<Orders>> QueryBy(Expression<System.Func<Orders, bool>> predicate)
         {
             throw new System.NotImplementedException();
         }

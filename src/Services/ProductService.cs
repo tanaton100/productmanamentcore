@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using ProductmanagementCore.Models;
@@ -9,7 +10,7 @@ namespace ProductmanagementCore.Services
 {
     public interface IProductService
     {
-        Task<IEnumerable<Products>> QueryBy(Expression<Func<Products, bool>> predicate);
+        Task<IQueryable<Products>> QueryBy(Expression<Func<Products, bool>> predicate);
         Task<IEnumerable<Products>> GetAll();
         Task<Products> FindById(int id);
         Task<Products> Add(Products product);
@@ -69,7 +70,7 @@ namespace ProductmanagementCore.Services
             return await _productRepository.DeleteAsync(id) > 0;
         }
 
-        public async Task<IEnumerable<Products>> QueryBy(Expression<Func<Products, bool>> predicate)
+        public async Task<IQueryable<Products>> QueryBy(Expression<Func<Products, bool>> predicate)
         {
             return await _productRepository.QueryBy(predicate);
         }

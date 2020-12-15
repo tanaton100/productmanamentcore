@@ -20,7 +20,6 @@ namespace ProductmanagementCore.Controllers
         public async Task<IActionResult> GetProduct()
         {
             var result = await _productService.GetAll();
-            var x = await _productService.QueryBy(_ => _.Price == 10);
             return Ok(result);
         }
 
