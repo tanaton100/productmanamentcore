@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Dapper;
@@ -15,7 +16,7 @@ namespace ProductmanagementCore.Repository
         ValueTask<int> AddAsync(Products entity);
         ValueTask<int> UpdateAsync(Products entity);
         ValueTask<int> DeleteAsync(int id);
-        ValueTask<IEnumerable<Products>> QueryBy(Expression<Func<Products, bool>> predicate);
+        ValueTask<IQueryable<Products>> QueryBy(Expression<Func<Products, bool>> predicate);
     }
 
     public class ProductRepository : GenericReposiory<Products>,IProductRepository
@@ -70,13 +71,13 @@ namespace ProductmanagementCore.Repository
             });
         }
 
-        public override async ValueTask<IEnumerable<Products>> QueryBy(Expression<Func<Products, bool>> predicate)
+        public override async ValueTask<IQueryable<Products>> QueryBy(Expression<Func<Products, bool>> predicate)
         {
 
 
             return await WithConnection(async conn =>
             {
-                return (await conn.QueryAsync<Products>(CreateSeleteString(), predicate));
+                return (await conn.QueryAsync<Products>(CreateSeleteString(), predicate)).AsQueryable();
             });
         }
     }
