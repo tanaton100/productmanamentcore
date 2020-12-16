@@ -31,6 +31,7 @@ namespace ProductmanagementCore
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
+
             var serviceAssembly = typeof(UserService).Assembly;
 
             builder.RegisterAssemblyTypes(serviceAssembly)
