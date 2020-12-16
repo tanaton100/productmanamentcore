@@ -40,10 +40,10 @@ namespace ProductmanagementCore.Controllers
         public async Task<IActionResult> ExportExcel()
         {
             var products = await _productService.GetAll();
-            var excelName = $"{DateTime.Now}";
+            var excelName = $"{DateTime.Now:dd/MM/yyyy}-product";
             using var excelPackage = new ExcelPackage();
             var workbook = excelPackage.Workbook;
-            var worksheet = workbook.Worksheets.Add("ActivityFeature");
+            var worksheet = workbook.Worksheets.Add("product");
 
             RenderHeader(worksheet);
 
@@ -65,12 +65,12 @@ namespace ProductmanagementCore.Controllers
         public async Task<IActionResult> ExportExcel1()
         {
             var products = await _productService.GetAll();
-            var excelName = $"{DateTime.Now}";
+            var excelName = $"{DateTime.Now:dd/MM/yyyy}-product";
             var stream = new MemoryStream();
 
             using (var package = new ExcelPackage(stream))
             {
-                var workSheet = package.Workbook.Worksheets.Add("Sheet1");
+                var workSheet = package.Workbook.Worksheets.Add("product");
                 workSheet.Cells.LoadFromCollection(products, true);
                 package.Save();
             }
