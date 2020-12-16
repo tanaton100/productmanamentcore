@@ -22,25 +22,16 @@ namespace ProductmanagementCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<DataContext.AppContext>(options =>
-            //                        options.UseSqlServer(
-            //                            Configuration.GetConnectionString("DefaultConnection")));
-
-            //services.AddMvc();
+          
             services.AddControllers();
             services.AddSwaggerGen();
-            //services.AddSwaggerGen(c => { //<-- NOTE 'Add' instead of 'Configure'
-            //    c.SwaggerDoc("v1", new OpenApiInfo
-            //    {
-            //        Title = "Product",
-            //        Version = "v1"
-            //    });
-            //});
+         
 
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
+
             var serviceAssembly = typeof(UserService).Assembly;
 
             builder.RegisterAssemblyTypes(serviceAssembly)

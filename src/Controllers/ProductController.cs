@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
 using ProductmanagementCore.Models;
 using ProductmanagementCore.Models.ModelInput;
 using ProductmanagementCore.Services;
+using System;
 using System.Threading.Tasks;
+using OfficeOpenXml.Style;
+using System.IO;
 
 namespace ProductmanagementCore.Controllers
 {
@@ -25,15 +29,60 @@ namespace ProductmanagementCore.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task <IActionResult> GetId([FromRoute]int id)
+        public async Task<IActionResult> GetId([FromRoute] int id)
         {
-            return Ok(await _productService.QueryBy(p =>p.Id==id));
+            return Ok(await _productService.QueryBy(p => p.Id == id));
+        }
+
+
+        [HttpGet]
+        [Route("export")]
+        public async Task<IActionResult> ExportExcel()
+        {
+            var products = await _productService.GetAll();
+            var excelName = $"{DateTime.Now}";
+            using var excelPackage = new ExcelPackage();
+            var workbook = excelPackage.Workbook;
+            var worksheet = workbook.Worksheets.Add("ActivityFeature");
+
+            RenderHeader(worksheet);
+
+            var dataRow = 2;
+            var column = 1;
+            foreach (var item in products)
+            {
+                worksheet.SetValue(dataRow, column++, item.Id);
+                worksheet.SetValue(dataRow, column, item.Name ?? "");
+                dataRow++;
+                column = 1;
+            }
+
+            return File(excelPackage.GetAsByteArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+        }
+
+        [HttpGet]
+        [Route("export1")]
+        public async Task<IActionResult> ExportExcel1()
+        {
+            var products = await _productService.GetAll();
+            var excelName = $"{DateTime.Now}";
+            var stream = new MemoryStream();
+
+            using (var package = new ExcelPackage(stream))
+            {
+                var workSheet = package.Workbook.Worksheets.Add("Sheet1");
+                workSheet.Cells.LoadFromCollection(products, true);
+                package.Save();
+            }
+            stream.Position = 0;
+
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
 
 
         [HttpPost]
         [Route("")]
-        public async Task<IActionResult> Post([FromBody]ProductInput product)
+        public async Task<IActionResult> Post([FromBody] ProductInput product)
         {
             var inputUpdate = new Products
             {
@@ -45,7 +94,7 @@ namespace ProductmanagementCore.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> Put([FromRoute]int id,[FromBody]ProductInput product)
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] ProductInput product)
         {
             var inputUpdate = new Products
             {
@@ -60,8 +109,26 @@ namespace ProductmanagementCore.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-           var result = await _productService.Delete(id);
+            var result = await _productService.Delete(id);
             return Ok(result);
+        }
+
+
+
+        private void RenderHeader(ExcelWorksheet worksheet)
+        {
+
+            string[] headers =
+           {
+                     "Id",
+                     "Name"
+                 };
+            var headerdatarow = 1;
+            foreach (var header in headers)
+            {
+
+                worksheet.Cells[1, headerdatarow++].Value = header;
+            }
         }
     }
 }
