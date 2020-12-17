@@ -67,7 +67,6 @@ namespace ProductmanagementCore.Controllers
             var products = await _productService.GetAll();
             var excelName = $"{DateTime.Now:dd/MM/yyyy}-product";
             var stream = new MemoryStream();
-
             using (var package = new ExcelPackage(stream))
             {
                 var workSheet = package.Workbook.Worksheets.Add("product");
