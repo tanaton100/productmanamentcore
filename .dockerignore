@@ -3,3 +3,5 @@ obj/*
 out/*
 app/*
 .vscode/*
+bin/
+obj/
