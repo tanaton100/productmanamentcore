@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 
@@ -21,7 +20,7 @@ namespace ProductmanagementCore.Repository
         protected GenericReposiory(IConfiguration configuration)
         {
             _configuration = configuration;
-            _connectionString = _configuration.GetConnectionString("DefaultConnection");
+            _connectionString = _configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException("DefaultConnection"); 
         }
 
         protected async ValueTask<T> WithConnection<T>(Func<IDbConnection, Task<T>> getData)
