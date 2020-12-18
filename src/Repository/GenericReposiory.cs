@@ -20,7 +20,7 @@ namespace ProductmanagementCore.Repository
         protected GenericReposiory(IConfiguration configuration)
         {
             _configuration = configuration;
-            _connectionString = _configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException("DefaultConnection"); 
+            _connectionString = _configuration.GetConnectionString("DefaultConnection"); 
         }
 
         protected async ValueTask<T> WithConnection<T>(Func<IDbConnection, Task<T>> getData)

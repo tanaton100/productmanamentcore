@@ -3,7 +3,6 @@ using ProductmanagementCore.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
-using System.Linq.Expressions;
 using System;
 using System.Linq;
 
