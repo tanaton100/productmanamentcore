@@ -48,13 +48,13 @@ namespace ProductmanagementCore.Controllers
             RenderHeader(worksheet);
 
             var dataRow = 2;
-            var column = 1;
             foreach (var item in products)
             {
+                var column = 1;
+
                 worksheet.SetValue(dataRow, column++, item.Id);
                 worksheet.SetValue(dataRow, column, item.Name ?? "");
                 dataRow++;
-                column = 1;
             }
 
             return File(excelPackage.GetAsByteArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
