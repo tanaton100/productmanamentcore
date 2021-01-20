@@ -64,8 +64,7 @@ namespace ProductmanagementCore.Controllers
             return Accepted(result);
         }
 
-        [HttpDelete]
-        [Route("{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser([FromRoute]int id)
         {
             var result = await _userService.DeleteUserById(id);
