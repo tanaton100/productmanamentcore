@@ -47,8 +47,7 @@ namespace ProductmanagementCore.Controllers
             var result = await _userService.AddUsers(input);
             return Accepted(result);
         }
-        [HttpPut]
-        [Route("{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser([FromRoute]int id, [FromBody]UserInputModel users)
         {
             var input = new Users
