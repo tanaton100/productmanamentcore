@@ -12,4 +12,3 @@ namespace ProductmanagementCore.Models
         public int UserId { get; set; }
     }
 }
-dsfdsf
