@@ -47,8 +47,7 @@ namespace ProductmanagementCore.Controllers
             var result = await _userService.AddUsers(input);
             return Accepted(result);
         }
-        [HttpPut]
-        [Route("{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser([FromRoute]int id, [FromBody]UserInputModel users)
         {
             var input = new Users
@@ -64,8 +63,7 @@ namespace ProductmanagementCore.Controllers
             return Accepted(result);
         }
 
-        [HttpDelete]
-        [Route("{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser([FromRoute]int id)
         {
             var result = await _userService.DeleteUserById(id);

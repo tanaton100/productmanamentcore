@@ -49,7 +49,6 @@ namespace ProductmanagementCore.Services
             return users;
         }
 
-
         public async Task<Users> GetByIdUsers(int id)
         {
             return await _userRepository.FindById(id);

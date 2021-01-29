@@ -9,8 +9,7 @@ services:
       - sql-server 
     environment:
       - ASPNETCORE_ENVIRONMENT=Development 
-    networks: 
-      - dev_network
+    
 
   sql-server:
     image: mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
@@ -21,7 +20,4 @@ services:
       - SA_PASSWORD=Tanaton100
     volumes:
       - /var/opt/mssql
-    networks: 
-      - dev_network
-networks: 
-  dev_network:
+   
