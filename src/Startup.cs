@@ -25,8 +25,6 @@ namespace ProductmanagementCore
         
             services.AddControllers();
             services.AddSwaggerGen();
-         
-
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
