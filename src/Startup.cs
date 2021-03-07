@@ -1,10 +1,17 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Reflection;
 using Autofac;
+using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using ProductmanagementCore.Common;
+using ProductmanagementCore.Models;
+using ProductmanagementCore.Models.Dto;
 using ProductmanagementCore.Repository;
 using ProductmanagementCore.Services;
 
@@ -22,16 +29,18 @@ namespace ProductmanagementCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-          
+
             services.AddControllers();
             services.AddSwaggerGen();
+            TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly());
         }
+
+    
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
 
-            var serviceAssembly = typeof(UserService).Assembly;
-
+                 var serviceAssembly = typeof(UserService).Assembly;
             builder.RegisterAssemblyTypes(serviceAssembly)
                 .Where(t => t.Name.EndsWith("Service")).AsImplementedInterfaces().SingleInstance();
 

@@ -5,12 +5,14 @@ using ProductmanagementCore.Models;
 using ProductmanagementCore.Repository;
 using System.Data;
 using System.Threading.Tasks;
+using Mapster;
+using ProductmanagementCore.Models.Dto;
 
 namespace ProductmanagementCore.Services
 {
     public interface IUserService
     {
-        Task<IEnumerable<Users>> GetAllUsers();
+        Task<IEnumerable<UserDto>> GetAllUsers();
         Task<Users> GetByIdUsers(int id);
         Task<Users> AddUsers(Users users);
         Task<Users> UpdateUser(Users users);
@@ -31,7 +33,7 @@ namespace ProductmanagementCore.Services
             _productRepository = productRepository;
         }
 
-        public async Task<IEnumerable<Users>> GetAllUsers()
+        public async Task<IEnumerable<UserDto>> GetAllUsers()
         {
             var users = await _userRepository.GetAll();
             var order = await _ordersRepository.GetAll();
@@ -40,13 +42,20 @@ namespace ProductmanagementCore.Services
             foreach (var user in users)
             {
                 var orderUser = order.Where(o => o.UserId == user.Id);
-                var oRderUserProductId = orderUser.Select(t => t.ProductId);
+                //  var oRderUserProductId = orderUser.Select(t => t.ProductId);
                 var listProduct = products.Where(p => orderUser.Any(ou => ou.ProductId == p.Id)).ToList();
-                var list = products.Where(p => oRderUserProductId.Contains(p.Id));
+                // var list = products.Where(p => oRderUserProductId.Contains(p.Id));
                 user.Products = listProduct;
             }
 
-            return users;
+            //TypeAdapterConfig<Users, UserDto>
+            //    .NewConfig()
+            //    .Map(d => d.Id, s => s.Id)
+            //    .Map(d => d.FullName, s => $"{s.Firstname} {s.Lastname}")
+            //    .Map(d => d.Products, s => s.Products);//lookup 
+
+            return users.Adapt<IEnumerable<UserDto>>();
+
         }
 
         public async Task<Users> GetByIdUsers(int id)
@@ -56,7 +65,7 @@ namespace ProductmanagementCore.Services
 
         public async Task<Users> AddUsers(Users users)
         {
-            var checkDuplicate =await ValidateUserNameExist(users);
+            var checkDuplicate = await ValidateUserNameExist(users);
 
             if (checkDuplicate)
                 throw new Exception("DuplicateName");
