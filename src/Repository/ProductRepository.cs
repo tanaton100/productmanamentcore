@@ -10,7 +10,7 @@ namespace ProductmanagementCore.Repository
 {
     public interface IProductRepository
     {
-        ValueTask<IEnumerable<Products>> GetAll();
+        Task<IEnumerable<Products>> GetAll();
         ValueTask<Products> FindById(int id);
         ValueTask<int> AddAsync(Products entity);
         ValueTask<int> UpdateAsync(Products entity);

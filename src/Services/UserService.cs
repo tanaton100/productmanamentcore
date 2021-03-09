@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ProductmanagementCore.Models;
@@ -35,15 +36,18 @@ namespace ProductmanagementCore.Services
 
         public async Task<IEnumerable<UserDto>> GetAllUsers()
         {
-            var users = await _userRepository.GetAll();
-            var order = await _ordersRepository.GetAll();
-            var products = await _productRepository.GetAll();
-
-            foreach (var user in users)
+            var users =  _userRepository.GetAll();
+            var order =  _ordersRepository.GetAll();
+            var products =  _productRepository.GetAll();
+             await Task.WhenAny(users, order,products);
+             var resultUsers = await users;
+             var resultOrder = await order;
+             var resultProducts = await products;
+            foreach (var user in resultUsers)
             {
-                var orderUser = order.Where(o => o.UserId == user.Id);
+                var orderUser = resultOrder.Where(o => o.UserId == user.Id);
                 //  var oRderUserProductId = orderUser.Select(t => t.ProductId);
-                var listProduct = products.Where(p => orderUser.Any(ou => ou.ProductId == p.Id)).ToList();
+                var listProduct = resultProducts.Where(p => orderUser.Any(ou => ou.ProductId == p.Id)).ToList();
                 // var list = products.Where(p => oRderUserProductId.Contains(p.Id));
                 user.Products = listProduct;
             }
@@ -54,7 +58,7 @@ namespace ProductmanagementCore.Services
             //    .Map(d => d.FullName, s => $"{s.Firstname} {s.Lastname}")
             //    .Map(d => d.Products, s => s.Products);//lookup 
 
-            return users.Adapt<IEnumerable<UserDto>>();
+            return resultUsers.Adapt<IEnumerable<UserDto>>();
 
         }
 

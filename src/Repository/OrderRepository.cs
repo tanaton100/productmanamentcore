@@ -10,7 +10,7 @@ namespace ProductmanagementCore.Repository
 {
     public interface IOrdersRepository
     {
-        ValueTask<IEnumerable<Orders>> GetAll();
+        Task<IEnumerable<Orders>> GetAll();
         ValueTask<Orders> FindById(int id);
         ValueTask<int> DeleteAsync(int entity);
         ValueTask<int> UpdateAsync(Orders entity);
@@ -33,7 +33,7 @@ namespace ProductmanagementCore.Repository
 
         public override async ValueTask<int> DeleteAsync(int id)
         {
-            var sqlCommand = string.Format(@"DELETE FROM [Orders] WHERE [Id] = @Id");
+            var sqlCommand = @"DELETE FROM [Orders] WHERE [Id] = @Id";
             return await WithConnection(async conn =>
              {
                  return await conn.ExecuteAsync(sqlCommand, new { Id = id });
@@ -41,7 +41,7 @@ namespace ProductmanagementCore.Repository
         }
         public async ValueTask<IEnumerable<Orders>> FindByUserId(int id)
         {
-            var sqlCommand = string.Format(@"SELECT * FROM [Orders] WHERE [UserId] = @UserId");
+            var sqlCommand = @"SELECT * FROM [Orders] WHERE [UserId] = @UserId";
 
             return await WithConnection(async conn =>
             {
@@ -50,7 +50,7 @@ namespace ProductmanagementCore.Repository
         }
         public override async ValueTask<int> UpdateAsync(Orders entity)
         {
-            var sqlCommand = string.Format(@"UPDATE [Orders] SET [ProductId] = @ProductId ,[UserId] = @UserId where [Id] =@Id");
+            var sqlCommand = @"UPDATE [Orders] SET [ProductId] = @ProductId ,[UserId] = @UserId where [Id] =@Id";
             return await WithConnection(async conn =>
             {
                 return await conn.ExecuteAsync(sqlCommand, new

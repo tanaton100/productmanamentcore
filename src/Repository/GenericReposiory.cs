@@ -12,15 +12,11 @@ namespace ProductmanagementCore.Repository
 {
     public abstract class GenericReposiory<TModel>
     {
-        private readonly IConfiguration _configuration;
         private readonly string _connectionString;
-
-
 
         protected GenericReposiory(IConfiguration configuration)
         {
-            _configuration = configuration;
-            _connectionString = _configuration.GetConnectionString("DefaultConnection"); 
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
         protected async ValueTask<T> WithConnection<T>(Func<IDbConnection, Task<T>> getData)
@@ -33,11 +29,12 @@ namespace ProductmanagementCore.Repository
             }
             catch (TimeoutException ex)
             {
-                throw new Exception(String.Format("{0}.WithConnection() experienced a SQL timeout", GetType().FullName), ex);
+                throw new Exception($"{GetType().FullName}.WithConnection() experienced a SQL timeout", ex);
             }
             catch (SqlException ex)
             {
-                throw new Exception(String.Format("{0}.WithConnection() experienced a SQL exception (not a timeout)", GetType().FullName), ex);
+                throw new Exception(
+                    $"{GetType().FullName}.WithConnection() experienced a SQL exception (not a timeout)", ex);
             }
         }
 
@@ -54,11 +51,12 @@ namespace ProductmanagementCore.Repository
             }
             catch (TimeoutException ex)
             {
-                throw new Exception(String.Format("{0}.WithConnection() experienced a SQL timeout", GetType().FullName), ex);
+                throw new Exception($"{GetType().FullName}.WithConnection() experienced a SQL timeout", ex);
             }
             catch (SqlException ex)
             {
-                throw new Exception(String.Format("{0}.WithConnection() experienced a SQL exception (not a timeout)", GetType().FullName), ex);
+                throw new Exception(
+                    $"{GetType().FullName}.WithConnection() experienced a SQL exception (not a timeout)", ex);
             }
         }
 
@@ -74,15 +72,16 @@ namespace ProductmanagementCore.Repository
             }
             catch (TimeoutException ex)
             {
-                throw new Exception(String.Format("{0}.WithConnection() experienced a SQL timeout", GetType().FullName), ex);
+                throw new Exception($"{GetType().FullName}.WithConnection() experienced a SQL timeout", ex);
             }
             catch (SqlException ex)
             {
-                throw new Exception(String.Format("{0}.WithConnection() experienced a SQL exception (not a timeout)", GetType().FullName), ex);
+                throw new Exception(
+                    $"{GetType().FullName}.WithConnection() experienced a SQL exception (not a timeout)", ex);
             }
         }
 
-        public async ValueTask<IEnumerable<TModel>> GetAll()
+        public async Task<IEnumerable<TModel>> GetAll()
         {
             return await WithConnection(async conn =>
             {

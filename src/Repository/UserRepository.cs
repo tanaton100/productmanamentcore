@@ -12,7 +12,7 @@ namespace ProductmanagementCore.Repository
     {
         ValueTask<int> AddAsync(Users tModel);
         ValueTask<int> DeleteAsync(int id);
-        ValueTask<IEnumerable<Users>> GetAll();
+        Task<IEnumerable<Users>> GetAll();
         ValueTask<Users> FindById(int id);
         ValueTask<int> UpdateAsync(Users tUsers);
         ValueTask<IQueryable<Users>> QueryBy(Func<Users, bool> predicate);

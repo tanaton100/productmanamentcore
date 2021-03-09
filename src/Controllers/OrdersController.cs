@@ -42,7 +42,7 @@ namespace ProductmanagementCore.Controllers
                 UserId = orders.IdUser
             };
             var result = await _ordersService.AddOrders(modelInput);
-            return Accepted(result);
+            return Created("", result);
         }
 
 

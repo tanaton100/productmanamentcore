@@ -1,17 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using Autofac;
 using Mapster;
-using MapsterMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
 using ProductmanagementCore.Common;
-using ProductmanagementCore.Models;
-using ProductmanagementCore.Models.Dto;
 using ProductmanagementCore.Repository;
 using ProductmanagementCore.Services;
 
@@ -61,6 +55,8 @@ namespace ProductmanagementCore
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
