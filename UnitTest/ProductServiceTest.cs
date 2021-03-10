@@ -33,10 +33,9 @@ namespace UnitTest
         }
 
         [Test]
-
         public async Task Given_WhenGetAllProducts_ThenReturenResultCount2()
         {
-            _autoMock.Mock<IProductRepository>().Setup(method => method.GetAll()).Returns(() => new ValueTask<IEnumerable<Products>>(ProductsMock()));
+            _autoMock.Mock<IProductRepository>().Setup(method => method.GetAll()).ReturnsAsync(ProductsMock());
             var result = (await _productService.GetAll());
             Assert.AreEqual(result.Count(),ProductsMock().Count());
 

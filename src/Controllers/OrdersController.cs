@@ -23,6 +23,13 @@ namespace ProductmanagementCore.Controllers
             return Ok(await _ordersService.GetAllOrder());
 
         }
+        [HttpGet]
+        [Route("getOrder")]
+        public async Task<IActionResult> GetOrder()
+        {
+            return Ok(await _ordersService.GetOrder());
+
+        }
 
         [HttpGet]
         [Route("{id}")]

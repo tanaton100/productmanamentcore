@@ -18,6 +18,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.5" />
+    <PackageReference Include="ToPage" Version="2.0.1" />
   </ItemGroup>
 
   <ItemGroup>

@@ -21,9 +21,17 @@ namespace ProductmanagementCore.Controllers
         }
         [HttpGet]
         [Route("")]
-        public async Task<IActionResult> GetProduct()
+        public async Task<IActionResult> GetAllProduct()
         {
             var result = await _productService.GetAll();
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("getProduct")]
+        public async Task<IActionResult> GetProduct(CriteriaRequest request)
+        {
+            var result = await _productService.GetByCretiria(request);
             return Ok(result);
         }
 
