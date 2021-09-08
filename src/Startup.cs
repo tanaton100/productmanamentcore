@@ -36,11 +36,11 @@ namespace ProductmanagementCore
 
                  var serviceAssembly = typeof(UserService).Assembly;
             builder.RegisterAssemblyTypes(serviceAssembly)
-                .Where(t => t.Name.EndsWith("Service")).AsImplementedInterfaces().SingleInstance();
+                .Where(t => t.Name.EndsWith("Service")).AsImplementedInterfaces().InstancePerDependency();
 
             var repositoryAssembly = typeof(UserRepository).Assembly;
             builder.RegisterAssemblyTypes(repositoryAssembly)
-                .Where(t => t.Name.EndsWith("Repository")).AsImplementedInterfaces().SingleInstance();
+                .Where(t => t.Name.EndsWith("Repository")).AsImplementedInterfaces().InstancePerDependency();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

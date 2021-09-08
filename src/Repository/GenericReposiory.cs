@@ -10,7 +10,18 @@ using System.Threading.Tasks;
 
 namespace ProductmanagementCore.Repository
 {
-    public abstract class GenericReposiory<TModel>
+    public interface IGenericRepository<TModel> where TModel : class
+    {
+        ValueTask<TModel> FindById(int id);
+        ValueTask<int> AddAsync(TModel entity);
+        ValueTask<int> UpdateAsync(TModel entity);
+        ValueTask<int> DeleteAsync(int id);
+        Task<IEnumerable<TModel>> GetAll();
+        ValueTask<IQueryable<TModel>> QueryBy(Func<TModel, bool> predicate);
+    }
+
+    public abstract class GenericReposiory<TModel> : IGenericRepository<TModel>
+        where TModel : class, new()
     {
         private readonly string _connectionString;
 
@@ -80,6 +91,7 @@ namespace ProductmanagementCore.Repository
                     $"{GetType().FullName}.WithConnection() experienced a SQL exception (not a timeout)", ex);
             }
         }
+
 
         public async Task<IEnumerable<TModel>> GetAll()
         {

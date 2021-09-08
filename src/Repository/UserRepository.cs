@@ -52,10 +52,7 @@ namespace ProductmanagementCore.Repository
         public override async ValueTask<int> DeleteAsync(int id)
         {
             var sqlCommand = string.Format(@"DELETE FROM [Users] WHERE [Id] = @Id");
-            return await WithConnection(async conn =>
-            {
-                return await conn.ExecuteAsync(sqlCommand, new { Id = id });
-            });
+            return await WithConnection(async conn => await conn.ExecuteAsync(sqlCommand, new { Id = id }));
 
         }
 
@@ -64,18 +61,15 @@ namespace ProductmanagementCore.Repository
             var sqlCommand = string.Format(@"UPDATE [Users] SET [Username] = @Username ,[Firstname] = @Firstname ,[Lastname] =@Lastname ,[Email] =@Email ,[Tel] =@Tel,[Password] = @Password WHERE [Id] = @Id");
 
 
-            return await WithConnection(async conn =>
+            return await WithConnection(async conn => await conn.ExecuteAsync(sqlCommand, new
             {
-                return await conn.ExecuteAsync(sqlCommand, new
-                {
-                    tModel.Id,
-                    tModel.Username,
-                    Fristname = tModel.Firstname,
-                    tModel.Lastname,
-                    tModel.Email,
-                    tModel.Tel,
-                });
-            });
+                tModel.Id,
+                tModel.Username,
+                Fristname = tModel.Firstname,
+                tModel.Lastname,
+                tModel.Email,
+                tModel.Tel,
+            }));
         }
 
         public override ValueTask<IQueryable<Users>> QueryBy(Func<Users, bool> predicate)

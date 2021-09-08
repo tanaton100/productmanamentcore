@@ -74,10 +74,7 @@ namespace ProductmanagementCore.Repository
         {
 
 
-            return await WithConnection(async conn =>
-            {
-                return (await conn.QueryAsync<Products>(CreateSeleteString(), null)).Where(predicate).AsQueryable();
-            });
+            return await WithConnection(async conn => (await conn.QueryAsync<Products>(CreateSeleteString(), null)).Where(predicate).AsQueryable());
         }
     }
 }

@@ -8,15 +8,10 @@ using System.Linq;
 
 namespace ProductmanagementCore.Repository
 {
-    public interface IOrdersRepository
+    public interface IOrdersRepository : IGenericRepository<Orders>
     {
-        Task<IEnumerable<Orders>> GetAll();
-        ValueTask<Orders> FindById(int id);
-        ValueTask<int> DeleteAsync(int entity);
-        ValueTask<int> UpdateAsync(Orders entity);
-        ValueTask<int> AddAsync(Orders entity);
+      
         ValueTask<IEnumerable<Orders>> FindByUserId(int id);
-        ValueTask<IQueryable<Orders>> QueryBy(Func<Orders, bool> predicate);
 
     }
 
@@ -34,52 +29,40 @@ namespace ProductmanagementCore.Repository
         public override async ValueTask<int> DeleteAsync(int id)
         {
             var sqlCommand = @"DELETE FROM [Orders] WHERE [Id] = @Id";
-            return await WithConnection(async conn =>
-             {
-                 return await conn.ExecuteAsync(sqlCommand, new { Id = id });
-             });
+            return await WithConnection(async conn => await conn.ExecuteAsync(sqlCommand, new { Id = id }));
         }
         public async ValueTask<IEnumerable<Orders>> FindByUserId(int id)
         {
             var sqlCommand = @"SELECT * FROM [Orders] WHERE [UserId] = @UserId";
 
-            return await WithConnection(async conn =>
-            {
-                return await conn.QueryAsync<Orders>(sqlCommand, new { Id = id });
-            });
+            return await WithConnection(async conn => await conn.QueryAsync<Orders>(sqlCommand, new { Id = id }));
         }
         public override async ValueTask<int> UpdateAsync(Orders entity)
         {
             var sqlCommand = @"UPDATE [Orders] SET [ProductId] = @ProductId ,[UserId] = @UserId where [Id] =@Id";
-            return await WithConnection(async conn =>
+            return await WithConnection(async conn => await conn.ExecuteAsync(sqlCommand, new
             {
-                return await conn.ExecuteAsync(sqlCommand, new
-                {
-                    entity.Id,
-                    entity.ProductId,
-                    entity.UserId
-                });
-            });
+                entity.Id,
+                entity.ProductId,
+                entity.UserId
+            }));
         }
 
         public override async ValueTask<int> AddAsync(Orders entity)
         {
             var sqlCommand = @"INSERT INTO [Orders] ([ProductId],[UserId]) VALUES (@ProductId,@UserId)SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            return await WithConnection(async conn =>
+            return await WithConnection(async conn => await conn.ExecuteScalarAsync<int>(sqlCommand, new
             {
-                return await conn.ExecuteScalarAsync<int>(sqlCommand, new
-                {
-                    entity.Id,
-                    entity.ProductId,
-                    entity.UserId
-                });
-            });
+                entity.Id,
+                entity.ProductId,
+                entity.UserId
+            }));
         }
 
         public override ValueTask<IQueryable<Orders>> QueryBy(Func<Orders, bool> predicate)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

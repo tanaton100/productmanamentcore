@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Mapster;
+using ProductmanagementCore.Common;
 using ProductmanagementCore.Models;
 using ProductmanagementCore.Models.Dto;
 using ProductmanagementCore.Models.ModelInput;
@@ -57,7 +58,7 @@ namespace ProductmanagementCore.Services
                    
                 ).ToList();
             }
-            var result = SortingProductList(productViewDtos, request).ToPageWithCounts(page,perPage);
+            var result = productViewDtos.SortList (request).ToPageWithCounts(page,perPage);
             
             return new ResponseProductView
             {

@@ -69,5 +69,18 @@ namespace ProductmanagementCore.Controllers
             var result = await _userService.DeleteUserById(id);
             return Accepted(result);
         }
+        [HttpGet("hhh")]
+
+        public IActionResult Test()
+        {
+            return Ok(new CrysTal());
+        }
+
+
+    }
+
+    public class CrysTal
+    {
+        public bool Test { get; set; }
     }
 }
