@@ -4,10 +4,8 @@ using NUnit.Framework;
 using ProductmanagementCore.Models;
 using ProductmanagementCore.Repository;
 using ProductmanagementCore.Services;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace UnitTest
@@ -37,7 +35,7 @@ namespace UnitTest
         {
             _autoMock.Mock<IProductRepository>().Setup(method => method.GetAll()).ReturnsAsync(ProductsMock());
             var result = (await _productService.GetAll());
-            Assert.AreEqual(result.Count(),ProductsMock().Count());
+            Assert.AreEqual(result.Count(), ProductsMock().Count());
 
         }
 
@@ -47,14 +45,14 @@ namespace UnitTest
             var productId = 1;
             var dataMockReturn = ProductsMock().FirstOrDefault(p => p.Id == productId);
             _autoMock.Mock<IProductRepository>().Setup(method => method.FindById(It.IsAny<int>()))
-                .Returns(() => new ValueTask<Products > (dataMockReturn));
+                .Returns(() => new ValueTask<Products>(dataMockReturn));
             var result = (await _productService.FindById(productId));
             Assert.AreEqual(result, dataMockReturn);
         }
 
 
 
-        public IEnumerable<Products> ProductsMock() 
+        public IEnumerable<Products> ProductsMock()
         {
 
             yield return new Products { Id = 1, Name = "Iphone" };

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Autofac.Extensions.DependencyInjection;
+﻿using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProductmanagementCore.Common;
 
 namespace ProductmanagementCore
 {
@@ -19,6 +19,8 @@ namespace ProductmanagementCore
                .ConfigureWebHostDefaults(webBuilder =>
                {
                    webBuilder.UseStartup<Startup>();
-               });
+               })
+        .ConfigureServices(
+            services => services.AddHostedService<WarmupServices>());
     }
 }

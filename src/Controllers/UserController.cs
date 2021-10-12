@@ -26,7 +26,7 @@ namespace ProductmanagementCore.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> GetUser([FromRoute]int id)
+        public async Task<IActionResult> GetUserByid([FromRoute]int id)
         {
             var result = await _userService.GetByIdUsers(id);
             return Ok(result);
@@ -69,18 +69,16 @@ namespace ProductmanagementCore.Controllers
             var result = await _userService.DeleteUserById(id);
             return Accepted(result);
         }
-        [HttpGet("hhh")]
 
-        public IActionResult Test()
+        [HttpGet("User/{userId}")]
+        public async Task<IActionResult> GetProductsWithUser([FromRoute] int userId)
         {
-            return Ok(new CrysTal());
+            var result = await _userService.GetProductsWithUser(userId);
+            return Ok(result);
         }
 
 
     }
 
-    public class CrysTal
-    {
-        public bool Test { get; set; }
-    }
+   
 }

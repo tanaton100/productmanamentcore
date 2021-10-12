@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using ProductmanagementCore.Models;
 using ProductmanagementCore.Repository;
 using System.Data;
 using System.Threading.Tasks;
 using Mapster;
 using ProductmanagementCore.Models.Dto;
+using System.Linq.Dynamic.Core;
 
 namespace ProductmanagementCore.Services
 {
@@ -18,6 +18,7 @@ namespace ProductmanagementCore.Services
         Task<Users> AddUsers(Users users);
         Task<Users> UpdateUser(Users users);
         Task<bool> DeleteUserById(int id);
+        Task<Users> GetProductsWithUser(int id);
     }
 
     public class UserService : IUserService
@@ -36,13 +37,13 @@ namespace ProductmanagementCore.Services
 
         public async Task<IEnumerable<UserDto>> GetAllUsers()
         {
-            var users =  _userRepository.GetAll();
-            var order =  _ordersRepository.GetAll();
-            var products =  _productRepository.GetAll();
-             await Task.WhenAny(users, order,products);
-             var resultUsers = await users;
-             var resultOrder = await order;
-             var resultProducts = await products;
+            var users = _userRepository.GetAll();
+            var order = _ordersRepository.GetAll();
+            var products = _productRepository.GetAll();
+            await Task.WhenAny(users, order, products);
+            var resultUsers = await users;
+            var resultOrder = await order;
+            var resultProducts = await products;
             foreach (var user in resultUsers)
             {
                 var orderUser = resultOrder.Where(o => o.UserId == user.Id);
@@ -112,7 +113,8 @@ namespace ProductmanagementCore.Services
 
         private async Task<bool> ValidateUserNameExist(Users users)
         {
-            var userList = await _userRepository.GetAll();
+            var userList = (await _userRepository.GetAll())
+                .ToList();
             var duplicated = userList.Where(d => d.Username.ToLower().Trim() == users.Username.ToLower().Trim() && d.Id != users.Id);
 
             return duplicated.Any();
@@ -123,7 +125,12 @@ namespace ProductmanagementCore.Services
             var user = await _userRepository.FindById(id);
             var ordersUserId = await _ordersRepository.FindByUserId(id);
             var products = await _productRepository.GetAll();
-            var productModel = ordersUserId.Select(order => products.FirstOrDefault(p => p.Id == order.ProductId)).ToList();
+            var productDic = products.ToDictionary(a => a.Id, a=>a);
+            //var productDic = products.GroupBy(d=>d.Id).ToDictionary(a => a.Key, a=>a.ToList());
+            var productModel = ordersUserId.Select(order =>
+               productDic[order.ProductId]
+              // products.FirstOrDefault(p =>p.Id ==order.ProductId)
+            ).ToList();
             user.Products = productModel;
             return user;
         }

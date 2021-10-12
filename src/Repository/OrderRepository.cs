@@ -33,7 +33,7 @@ namespace ProductmanagementCore.Repository
         }
         public async ValueTask<IEnumerable<Orders>> FindByUserId(int id)
         {
-            var sqlCommand = @"SELECT * FROM [Orders] WHERE [UserId] = @UserId";
+            var sqlCommand = @"SELECT * FROM [Orders] WHERE [UserId] = @id";
 
             return await WithConnection(async conn => await conn.QueryAsync<Orders>(sqlCommand, new { Id = id }));
         }
