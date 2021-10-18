@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using ProductmanagementCore.Common;
 using ProductmanagementCore.Repository;
@@ -33,10 +34,12 @@ namespace ProductmanagementCore
 
             services.AddControllers();
             services.AddHealthChecks()
-            .AddSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            .AddSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+             .AddUrlGroup(new Uri("https://localhost:5001/api/Order/getallt"), "Order");
             services.AddSwaggerGen();
             TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly());
-        }
+     
+         }
 
     
 

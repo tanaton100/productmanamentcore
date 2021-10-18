@@ -120,6 +120,14 @@ namespace ProductmanagementCore.Controllers
             return Ok(result);
         }
 
+        [HttpPut]
+        [Route("updateProduct")]
+        public async Task<IActionResult> UpdateProductmulti()
+        {
+          await  _productService.UpdateMulit();
+            return Accepted();
+        }
+
 
 
         private void RenderHeader(ExcelWorksheet worksheet)

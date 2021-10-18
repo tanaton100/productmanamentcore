@@ -22,6 +22,7 @@ namespace ProductmanagementCore.Services
         Task<Products> Update(Products product);
         Task<ResponseProductView> GetByCretiria(CriteriaRequest request);
         Task<bool> Delete(int id);
+        Task UpdateMulit();
     }
 
     public class ProductService : IProductService
@@ -55,11 +56,11 @@ namespace ProductmanagementCore.Services
             {
                 productViewDtos = productViewDtos.Where(cpv =>
                     cpv.Name.Contains(filter, StringComparison.OrdinalIgnoreCase)
-                   
+
                 ).ToList();
             }
-            var result = productViewDtos.SortList (request).ToPageWithCounts(page,perPage);
-            
+            var result = productViewDtos.SortList(request).ToPageWithCounts(page, perPage);
+
             return new ResponseProductView
             {
                 ProductDtos = result,
@@ -136,6 +137,18 @@ namespace ProductmanagementCore.Services
         public async Task<IQueryable<Products>> QueryBy(Func<Products, bool> predicate)
         {
             return await _productRepository.QueryBy(predicate);
+        }
+
+        public async Task UpdateMulit()
+        {
+            var listProduct = new List<Products>
+            {
+                new Products{ Id = 1,Name = "Iphone 10" ,Price =28111.21m},
+                new Products{Id = 2,Name = "IpadPro" ,Price =15000.51m },
+            };
+
+           await _productRepository.UpdateMutiProductWithStored(listProduct);
+
         }
     }
 }
