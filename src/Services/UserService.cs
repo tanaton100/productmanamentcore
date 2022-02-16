@@ -53,11 +53,7 @@ namespace ProductmanagementCore.Services
                 user.Products = listProduct;
             }
 
-            //TypeAdapterConfig<Users, UserDto>
-            //    .NewConfig()
-            //    .Map(d => d.Id, s => s.Id)
-            //    .Map(d => d.FullName, s => $"{s.Firstname} {s.Lastname}")
-            //    .Map(d => d.Products, s => s.Products);//lookup 
+       
 
             return resultUsers.Adapt<IEnumerable<UserDto>>();
 

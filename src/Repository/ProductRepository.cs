@@ -91,10 +91,10 @@ namespace ProductmanagementCore.Repository
                     var nameStored = "UpdateProductList";
 
                     var dataTableProduct = products.ToDataTable();
-                    dataTableProduct.TableName = "products_Data";
+                    //dataTableProduct.TableName = "products_Data";
                     var dynamicParameters = new DynamicParameters();
                     dynamicParameters.Add("@products_Data", dataTableProduct.AsTableValuedParameter("[dbo].[Product_type]"));
-                    await connection.ExecuteAsync(nameStored, dynamicParameters, commandType: CommandType.StoredProcedure);
+                    connection.ExecuteAsync(nameStored, dynamicParameters, commandType: CommandType.StoredProcedure);
 
 
                 }

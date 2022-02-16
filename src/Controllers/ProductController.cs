@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using OfficeOpenXml.Style;
 using System.IO;
+using System.Linq;
 
 namespace ProductmanagementCore.Controllers
 {
@@ -24,6 +25,7 @@ namespace ProductmanagementCore.Controllers
         public async Task<IActionResult> GetAllProduct()
         {
             var result = await _productService.GetAll();
+
             return Ok(result);
         }
 
@@ -124,7 +126,7 @@ namespace ProductmanagementCore.Controllers
         [Route("updateProduct")]
         public async Task<IActionResult> UpdateProductmulti()
         {
-          await  _productService.UpdateMulit();
+            _productService.UpdateMulit();
             return Accepted();
         }
 

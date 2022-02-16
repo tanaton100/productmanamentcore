@@ -143,11 +143,11 @@ namespace ProductmanagementCore.Services
         {
             var listProduct = new List<Products>
             {
-                new Products{ Id = 1,Name = "Iphone 10" ,Price =28111.21m},
-                new Products{Id = 2,Name = "IpadPro" ,Price =15000.51m },
+                new Products{ Id = 1,Name = "Iphone xห" ,Price =25700.21m},
+                new Products{Id = 2,Name = "IpadPro M1ป" ,Price =29900m },
             };
 
-           await _productRepository.UpdateMutiProductWithStored(listProduct);
+            _productRepository.UpdateMutiProductWithStored(listProduct);
 
         }
     }
